@@ -1,0 +1,22 @@
+<html>
+<head>
+<title> Window.open </title>
+<script type="text/javascript">
+
+function NewWindow()
+{
+    alert("Opening window without user interaction should be blocked by popup blocker");
+    window.open("failed.html", "_blank");
+}
+
+function myOpen() {
+    setTimeout("NewWindow()", 500);
+}
+</script>
+</head>
+<body onload="myOpen();">
+<div style="width:400px">
+I will open a new in 500ms, Good Luck!!!
+</div>
+</body>
+</html>

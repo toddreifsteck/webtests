@@ -5,12 +5,12 @@
 	<meta charset="utf-8" />
 </head>
 <body>
-    <a href="onload.html" target="_blank">Window.open onload (should be blocked by popup blocker)</a>
+    1. <a href="onload.html" target="_blank">Window.open onload (should be blocked by popup blocker)</a>
     <br />
-    <a href="auto.html" target="_blank">Window.open from onload scheduling setTimeout 500 ms (should be blocked by popup blocker)</a>
+    2. <a href="auto.html" target="_blank">Window.open from onload scheduling setTimeout 500 ms (should be blocked by popup blocker)</a>
     <br />
-    <a href="button.html" target="_blank">Window.open from button click with _blank target</a>
+    3. <a href="button.html" target="_blank">Window.open from button click with _blank target. This passes everywhere.</a>
     <br />
-    <a href="docWriteInitial.html" target="_blank">Anchor to open new window with document.write to update content cross window</a>
+    4. <a href="winOpenPostMessageInitial.html" target="_blank">Onclick of div to open new window with postMessage to update content cross window</a>
 </body>
 </html>

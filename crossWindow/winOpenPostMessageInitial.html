@@ -1,0 +1,26 @@
+<html>
+<body>
+    <script type="text/javascript">
+        function receiveMessage(event) {
+            document.getElementById('foo').innerText = "SUCCESS";
+        }
+
+        window.addEventListener("message", receiveMessage, false);
+
+        function poponload()
+        {            
+            testwindow = window.open("winOpenPostMessageSecondary.html", "mywindow");
+            testwindow.postMessage("test", "*");
+        }
+    </script>
+    
+        This is the original window.
+
+        The new window opened from the anchor originally has 'This is the popup page.' as its text. This window will change the text to Hey there. 
+    The new window will attempt to alter this page's text to 'Hey there as well'.
+    <bold>
+        <div onclick="javascript: poponload();">Click me to open window and see SUCCESS on other page!</div>
+        </bold>
+        <p id="foo"></p>
+</body>
+</html>

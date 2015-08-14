@@ -1,0 +1,22 @@
+<html>
+<head>
+    <script type="text/javascript">
+        function receiveMessage(event) {
+            document.getElementById('foo').innerText = "SUCCESS";
+        }
+
+        window.addEventListener("message", receiveMessage);        
+
+        function poponload() {
+            window.opener.postMessage("back", "*");
+        }
+    </script>
+</head>
+<body>
+    This is the popup page.
+    <bold>
+        <div onclick="javascript: poponload();">Click me to open window and see SUCCESS on other page!</div>
+    </bold>
+    <p id="foo"></p>
+</body>
+</html>

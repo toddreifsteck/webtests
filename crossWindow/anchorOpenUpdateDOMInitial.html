@@ -9,11 +9,11 @@
         window.addEventListener("message", receiveMessage, false);
 
         function send() {
-            testwindow.postMessage("test", "*");
+            testwindow.document.body.innerHTML = "SUCCESS";
         }
 
         function poponload() {
-            testwindow = window.open("winOpenPostMessageSecondary.html", "mywindow");
+            testwindow = window.open("", "mywindow");
 
             setTimeout(send, 5000);
         }
@@ -23,9 +23,7 @@
 
         The new window opened from the anchor originally has 'This is the popup page.' as its text. This window will change the text to Hey there. 
     The new window will attempt to alter this page's text to 'Hey there as well'.
-    <bold>
-        <div onclick="javascript: poponload();">Click me to open window and see SUCCESS on other page in 5 seconds!</div>
-        </bold>
+        <a onclick="javascript: poponload();" href="failed.html" target="_blank">Click me to open window and see SUCCESS on other page in 5 seconds!</a>
         <p id="foo"></p>
 </body>
 </html>

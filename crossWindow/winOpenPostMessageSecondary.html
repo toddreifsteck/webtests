@@ -7,15 +7,19 @@
 
         window.addEventListener("message", receiveMessage);        
 
-        function poponload() {
+        function send() {
             window.opener.postMessage("back", "*");
+        }
+
+        function poponload() {            
+            setTimeout(send, 5000);
         }
     </script>
 </head>
 <body>
     This is the popup page.
     <bold>
-        <div onclick="javascript: poponload();">Click me to open window and see SUCCESS on other page!</div>
+        <div onclick="javascript: poponload();">Click me to send SUCCESS back to other page. Change tabs and you should see it appear in 5 seconds!</div>
     </bold>
     <p id="foo"></p>
 </body>

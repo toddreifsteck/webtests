@@ -1,0 +1,100 @@
+﻿<html>
+<body>
+    <script>
+        var currIter;
+        var iters;
+        var execNum;
+        var startedExecute;
+        var sch = 'sched';
+        var schNum = sch + ' ';
+        var exec = 'exec';
+        var excNum = exec + ' ';
+        var schStart = sch + 'Start ';
+        var schEnd = sch + 'End ';
+        var execStart = exec + 'Start ';
+        var execEnd = exec + 'End ';
+
+        function execute(param1, param2) {
+            if (!startedExecute) {
+                startedExecute = true;
+                performance.mark(execStart);
+                currIter = 0;
+            }
+
+            var p1 = param1;
+            var p2 = param2;
+            currIter++;
+
+            if (currIter == iters) {
+                performance.mark(execEnd);
+                performance.measure(schNum, schStart, schEnd);
+                performance.measure(excNum, execStart, execEnd);
+                var schedElement = document.createElement('div');
+                var iterations = iters + 'iterations ';
+                var params = '';
+                if (p1)
+                {
+                    params = '1 param ';
+                    if (p2) {
+                        params = '2 params ';
+                    }                    
+                }
+                schedElement.textContent = iterations + params + sch + ':' + performance.getEntriesByName(schNum)[0].duration;
+                var execElement = document.createElement('div');
+                execElement.textContent = iterations + params + exec + ':' + performance.getEntriesByName(excNum)[0].duration;
+                document.body.appendChild(schedElement);
+                document.body.appendChild(execElement);
+                if (iters < 10000) {
+                    iters = iters * 10;
+                    start();
+                }                
+            }
+        }
+
+        function updateSuffix(myString) {
+            return myString.substring(0, myString.length - 1) + execNum;
+        }
+
+        function start() {
+            if (!execNum) {
+                execNum = 1;
+            } else {
+                execNum++;
+            }
+         
+            startedExecute = false;
+            schNum = updateSuffix(schNum);
+            excNum = updateSuffix(excNum);
+            schStart = updateSuffix(schStart);
+            schEnd = updateSuffix(schEnd);
+            execStart = updateSuffix(execStart);
+            execEnd = updateSuffix(execEnd);
+
+
+            if (params == 0) {
+                performance.mark(schStart);
+                for (var i = 0; i < iters; i++) {
+                    setTimeout(execute, 0);
+                }
+                performance.mark(schEnd);
+            } else if (params == 1) {
+                performance.mark(schStart);
+                for (var i = 0; i < iters; i++) {
+                    setTimeout(execute, 0, 1);
+                }
+                performance.mark(schEnd);
+            } else if (params == 2) {
+                performance.mark(schStart);
+                for (var i = 0; i < iters; i++) {
+                    setTimeout(execute, 0, 1, 2);
+                }
+                performance.mark(schEnd);
+            }
+        }
+    </script>
+    <button onclick="iters = 10; params = 0; start();">START</button>
+    <button onclick="iters = 10; params = 1; start(1);">START 1 PARAM</button>
+    <div id="schedule"></div>
+    <div id="execute"></div>
+</body>
+</html>

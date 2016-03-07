@@ -32,6 +32,11 @@
                 var schedElement = document.createElement('div');
                 var iterations = iters + 'iterations ';
                 var paramString = arguments.length + ' params';
+                if (params == 'raf')
+                {
+                    paramString = 'raf';
+                }
+                
                 schedElement.textContent = iterations + paramString + sch + ':' + performance.getEntriesByName(schNum)[0].duration;
                 var execElement = document.createElement('div');
                 execElement.textContent = iterations + paramString + exec + ':' + performance.getEntriesByName(excNum)[0].duration;
@@ -107,6 +112,13 @@
                 }
                 performance.mark(schEnd);
             }
+             else if (params == 'raf') {
+                performance.mark(schStart);
+                for (var i = 0; i < iters; i++) {
+                    requestAnimationFrame(execute);
+                }
+                performance.mark(schEnd);
+            }
         }
     </script>
     <button onclick="iters = 10; params = 0; start();">START</button>
@@ -116,6 +128,7 @@
     <button onclick="iters = 10; params = 'short'; start();">START SHORT STRING</button>
     <button onclick="iters = 10; params = 'short10'; start();">START SHORT STRING 10 PARAMS</button>
     <button onclick="iters = 10; params = 'long'; start();">START LONG STRING</button>
+    <button onclick="iters = 10; params = 'raf'; start();">START RAF</button>
     <div id="schedule"></div>
     <div id="execute"></div>
 </body>

@@ -63,13 +63,17 @@
         function updateSuffix(myString) {
             return myString.substring(0, myString.length - 1) + execNum;
         }
-
-        function start() {
+        
+        function incrementExecCount() {
             if (!execNum) {
                 execNum = 1;
             } else {
                 execNum++;
             }
+        }
+        
+        function start() {
+            incrementExecCount();    
          
             startedExecute = false;
             schNum = updateSuffix(schNum);
@@ -136,6 +140,38 @@
             iters = evt.currentTarget.id;
             start();
         }
+        
+        function createExecuteClosure() {
+            return function () {
+                execute();
+            };
+        }
+        
+        function addClickListeners(count) {
+            incrementExecCount();
+            var countString = count.toString();
+            var button = document.getElementById(countString);
+            button.addEventListener("click", startClick);
+            var startMark = 'startClick' + countString + '-' + execNum;
+            var endMark = 'endClick' + countString + '-' + execNum;
+            performance.mark(startMark);
+            for (i = 0; i<count; i++) {
+               button.addEventListener("click", createExecuteClosure());    
+            }
+            performance.mark(endMark);
+            
+            var measure = 'click' + countString + '-' + execNum;
+            performance.measure(measure, startMark, endMark);
+            var addListenerElement = document.createElement('div');
+            addListenerElement.textContent =  'click' + countString + ' duration: ' + performance.getEntriesByName(measure)[0].duration;
+            document.body.appendChild(addListenerElement);
+        }
+        
+        function addListeners() {
+            addClickListeners(10);
+            addClickListeners(100);
+            addClickListeners(1000);
+        }
     </script>
     <button onclick="iters = 10; params = 0; start();">START</button>
     <button onclick="iters = 10; params = 1; start();">START 1 PARAM</button>
@@ -149,42 +185,9 @@
     <button id="100">100 ONCLICK EVENTS</button>
     <button id="1000">1000 ONCLICK EVENTS</button>
     <button id="10000">10000 ONCLICK EVENTS</button>
-    <div id="schedule"></div>
-    <div id="execute"></div>
-    <script>
-        
-        function createExecuteClosure() {
-            return function () {
-                execute();
-            };
-        }
-        
-        function addClickListeners(count) {
-            var countString = count.toString();
-            var button = document.getElementById(countString);
-            button.addEventListener("click", startClick);
-            var startMark = 'startClick' + countString;
-            var endMark = 'endClick' + countString;
-            performance.mark(startMark);
-            for (i = 0; i<count; i++) {
-               button.addEventListener("click", createExecuteClosure());    
-            }
-            performance.mark(endMark);
-            
-            var measure = 'click' + countString;
-            performance.measure(measure);
-            var addListenerElement = document.createElement('div');
-            addListenerElement.textContent =  'click' + countString + ' duration: ' + performance.getEntriesByName(measure)[0].duration;
-            document.body.appendChild(addListenerElement);
-        }
-        
-        function addListeners() {
-            addClickListeners(10);
-            addClickListeners(100);
-            addClickListeners(1000);
-        }
-    </script>
     <button onClick="addListeners();">HOOK UP 10/100/1k EVENTS</button>
     <button onClick="addClickListeners(10000);">HOOK UP 10k EVENTS</button>
+    <div id="schedule"></div>
+    <div id="execute"></div>
 </body>
 </html>

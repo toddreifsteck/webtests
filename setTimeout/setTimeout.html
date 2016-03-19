@@ -178,10 +178,13 @@
             document.body.appendChild(addListenerElement);
         }
         
-        addClickListeners(10);
-        addClickListeners(100);
-        addClickListeners(1000);
+        function addListeners() {
+            addClickListeners(10);
+            addClickListeners(100);
+            addClickListeners(1000);
+        }
     </script>
+    <button onClick="addListeners();">HOOK UP 10/100/1k EVENTS</button>
     <button onClick="addClickListeners(10000);">HOOK UP 10k EVENTS</button>
 </body>
 </html>

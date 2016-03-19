@@ -27,9 +27,11 @@
 
             if (currIter == iters) {
                 performance.mark(execEnd);
-                performance.measure(schNum, schStart, schEnd);
                 performance.measure(excNum, execStart, execEnd);
-                var schedElement = document.createElement('div');
+                
+                if (params != 'click') {
+                    
+                }
                 var iterations = iters + 'iterations ';
                 var paramString = arguments.length + ' params';
                 if (params == 'raf')
@@ -37,12 +39,21 @@
                     paramString = 'raf';
                 }
                 
-                schedElement.textContent = iterations + paramString + sch + ':' + performance.getEntriesByName(schNum)[0].duration;
+                if (params == 'click') {
+                    console.log('click');
+                    paramString = 'click' + iters
+                } else {
+                    var schedElement = document.createElement('div');
+                    performance.measure(schNum, schStart, schEnd);
+                    schedElement.textContent = iterations + paramString + sch + ':' + performance.getEntriesByName(schNum)[0].duration;
+                    document.body.appendChild(schedElement);
+                }
+                
                 var execElement = document.createElement('div');
                 execElement.textContent = iterations + paramString + exec + ':' + performance.getEntriesByName(excNum)[0].duration;
-                document.body.appendChild(schedElement);
                 document.body.appendChild(execElement);
-                if (iters < 10000) {
+                
+                if ((params != 'click') && (iters < 10000)) {
                     iters = iters * 10;
                     start();
                 }                
@@ -67,7 +78,6 @@
             schEnd = updateSuffix(schEnd);
             execStart = updateSuffix(execStart);
             execEnd = updateSuffix(execEnd);
-
 
             if (params == 0) {
                 performance.mark(schStart);
@@ -111,14 +121,20 @@
                     setTimeout(longString, 0);
                 }
                 performance.mark(schEnd);
-            }
-             else if (params == 'raf') {
+            } else if (params == 'raf') {
                 performance.mark(schStart);
                 for (var i = 0; i < iters; i++) {
                     requestAnimationFrame(execute);
                 }
                 performance.mark(schEnd);
             }
+        }
+        
+        function startClick(evt) {
+            console.log('click');
+            params = 'click';
+            iters = evt.currentTarget.id;
+            start();
         }
     </script>
     <button onclick="iters = 10; params = 0; start();">START</button>
@@ -129,7 +145,43 @@
     <button onclick="iters = 10; params = 'short10'; start();">START SHORT STRING 10 PARAMS</button>
     <button onclick="iters = 10; params = 'long'; start();">START LONG STRING</button>
     <button onclick="iters = 10; params = 'raf'; start();">START RAF</button>
+    <button id="10">10 ONCLICK EVENTS</button>
+    <button id="100">100 ONCLICK EVENTS</button>
+    <button id="1000">1000 ONCLICK EVENTS</button>
+    <button id="10000">10000 ONCLICK EVENTS</button>
     <div id="schedule"></div>
     <div id="execute"></div>
+    <script>
+        
+        function createExecuteClosure() {
+            return function () {
+                execute();
+            };
+        }
+        
+        function addClickListeners(count) {
+            var countString = count.toString();
+            var button = document.getElementById(countString);
+            button.addEventListener("click", startClick);
+            var startMark = 'startClick' + countString;
+            var endMark = 'endClick' + countString;
+            performance.mark(startMark);
+            for (i = 0; i<count; i++) {
+               button.addEventListener("click", createExecuteClosure());    
+            }
+            performance.mark(endMark);
+            
+            var measure = 'click' + countString;
+            performance.measure(measure);
+            var addListenerElement = document.createElement('div');
+            addListenerElement.textContent =  'click' + countString + ' duration: ' + performance.getEntriesByName(measure)[0].duration;
+            document.body.appendChild(addListenerElement);
+        }
+        
+        addClickListeners(10);
+        addClickListeners(100);
+        addClickListeners(1000);
+    </script>
+    <button onClick="addClickListeners(10000);">HOOK UP 10k EVENTS</button>
 </body>
 </html>

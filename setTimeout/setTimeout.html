@@ -145,7 +145,7 @@
             } else if (params == 'raf') {
                 performance.mark(schStart);
                 for (var i = 0; i < iters; i++) {
-                    requestAnimationFrame(execute);
+                    requestAnimationFrame(createExecutionClosure());
                 }
                 performance.mark(schEnd);
             }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Leak Test</title>
+        <style>
+            iframe { display: block; }
+        </style>
+
+        <script>
+            var count;
+            var maxCount = 50;
+            function iFrameLoaded() {
+                if (count < maxCount) {
+                    count++;
+                    // After the iFrame finishes loading, wait 2 seconds then repeat
+                    setTimeout(addIframe, 2000);
+                }
+            }
+
+            function addIframe(){
+                var originalOuterDiv = document.getElementById("outerDiv");
+                var body = originalOuterDiv.parentNode;
+                if(originalOuterDiv){
+                    originalOuterDiv.parentNode.removeChild(originalOuterDiv);
+                }
+                var outerDiv = document.createElement("div");
+                outerDiv.id = "outerDiv";
+                
+                var theIFrame = document.createElement("iframe");
+                theIFrame.src = document.getElementById("site").value;
+                theIFrame.style.width = "640px";
+                theIFrame.style.height = "480px";
+                theIFrame.onload = iFrameLoaded;
+
+                outerDiv.appendChild(theIFrame);
+
+                body.appendChild(outerDiv);
+            }
+        </script>
+    </head>
+    <body>
+        <input id="site" value="http://cnn.com"></text>
+        <input type="button" value="Test" onclick="count=1;addIframe();" />
+        <input type="button" value="TestOnce" onclick="count=maxCount;addIframe();" />
+        <div id="outerDiv">
+        </div>
+    </body>
+</html>

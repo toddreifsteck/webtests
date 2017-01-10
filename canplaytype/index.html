@@ -1,0 +1,37 @@
+﻿<html>
+<body>
+    <video id="foo"></video>
+    <pre id="output"></pre>
+    <script>
+        function canPlayLoop(name, count, mediaElement) {
+            var start = count + name + ' start';
+            var end = count + name + ' end';
+            var duration = count + name;
+            performance.mark(start);
+            for (var i = 0; i < count; i++) {
+                (mediaElement || document.createElement('video')).canPlayType('video/mp4');
+            }
+            
+            performance.mark(end);
+            performance.measure(duration, start, end);
+        }
+
+        var foo = document.getElementById('foo');        
+
+        canPlayLoop('times', 10, foo);
+        canPlayLoop('times', 100, foo);
+        canPlayLoop('times', 1000, foo);
+        canPlayLoop('create', 10);
+        canPlayLoop('create', 100);
+        canPlayLoop('create', 1000);
+        
+        var entries = performance.getEntriesByType('measure');
+        var output = '';
+        for (var index = 0; index < entries.length; index++) {
+            output += entries[index].name + ' ' + entries[index].duration + '\n';
+        }
+        var outputElement = document.getElementById('output');
+        outputElement.textContent = output;
+    </script>    
+</body>
+</html>
